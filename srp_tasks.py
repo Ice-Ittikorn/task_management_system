@@ -37,11 +37,12 @@ class FileTaskStorage(TaskStorage):
 
 
 class Task:
-   def __init__(self, task_id, description, due_date=None, completed=False):
+   def __init__(self, task_id, description, due_date=None, completed=False, priority="medium"):
        self.id = task_id
        self.description = description
        self.due_date = due_date
        self.completed = completed
+       self.priority = priority  # เพิ่ม priority
 
    def mark_completed(self):
        self.completed = True
@@ -50,7 +51,7 @@ class Task:
    def __str__(self):
        status = "✓" if self.completed else " "
        due = f" (Due: {self.due_date})" if self.due_date else ""
-       return f"[{status}] {self.id}. {self.description}{due}"
+       return f"[{status}] {self.id}. {self.description} [Priority: {self.priority}]{due}"
 
 # srp_tasks.py (ปรับปรุง TaskManager)
 
@@ -62,38 +63,13 @@ class TaskManager:
        print(f"Loaded {len(self.tasks)} tasks. Next ID: {self.next_id}")
 
 
-   def add_task(self, description, due_date=None):
-       task = Task(self.next_id, description, due_date)
+   def add_task(self, description, due_date=None, priority="medium"):
+       task = Task(self.next_id, description, due_date, priority=priority)  # เพิ่ม priority
        self.tasks.append(task)
        self.next_id += 1
        self.storage.save_tasks(self.tasks) # Save after adding
-       print(f"Task '{description}' added.")
+       print(f"Task '{description}' added with priority {priority}.")
        return task
-
-
-   def list_tasks(self):
-       print("\n--- Current Tasks ---")
-       if not self.tasks:
-           print("No tasks available.")
-           return
-       for task in self.tasks:
-           print(task)
-       print("---------------------")
-
-   def get_task_by_id(self, task_id):
-       for task in self.tasks:
-           if task.id == task_id:
-               return task
-       return None
-
-   def mark_task_completed(self, task_id):
-       task = self.get_task_by_id(task_id)
-       if task:
-           task.mark_completed()
-           self.storage.save_tasks(self.tasks) # Save after marking
-           return True
-       print(f"Task {task_id} not found.")
-       return False
 
 
 if __name__ == "__main__":
