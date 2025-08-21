@@ -41,3 +41,5 @@ jobs:
 
    - name: Display success message
      run: echo "CI/CD Pipeline finished successfully!"
+print(“Finished”)
+  ) 
