@@ -71,6 +71,7 @@ class TaskManager:
        print(f"Task '{description}' added with priority {priority}.")
        return task
 
+print(“Finished”) 
 
 if __name__ == "__main__":
    file_storage = FileTaskStorage("my_tasks.txt")
